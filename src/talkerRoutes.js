@@ -123,4 +123,20 @@ router.post('/', validateName, validateToken, validateAge, validateTalk,
     }
   });
 
+router.put('/:id', validateName, validateToken, validateAge, validateTalk,
+  validateWatchedAt, validateTalkRate, validateTalkwithRate, async (req, res) => {
+    const { id } = req.params;
+    const person = req.body;
+    try {
+      const result = await talkerDB.putTalker(person, id);
+      if (result === null) {
+        return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+      }
+      return res.status(200).json(result[5]);
+    } catch (error) {
+      console.error('Erro na solicitação:', error);
+      res.status(500).json({ message: 'Erro na solicitação' });
+    }
+  });
+
 module.exports = router;
