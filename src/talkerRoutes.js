@@ -139,4 +139,15 @@ router.put('/:id', validateName, validateToken, validateAge, validateTalk,
     }
   });
 
+router.delete('/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await talkerDB.deleteTalker(id);
+    return res.status(204).end();
+  } catch (error) {
+    console.error('Erro na solicitação:', error);
+    res.status(500).json({ message: 'Erro na solicitação' });
+  }
+});
+
 module.exports = router;

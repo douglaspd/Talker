@@ -49,6 +49,14 @@ const putTalker = async (person, id) => {
   return talkers;
 };
 
+const deleteTalker = async (id) => {
+  const data = await fs.readFile(path.resolve(PATH), 'utf8');
+  const talkers = JSON.parse(data);
+  const delTalker = talkers.filter((talker) => talker.id !== Number(id));
+  await fs.writeFile(path.resolve(PATH), JSON.stringify(delTalker));
+  return delTalker;
+};
+
 module.exports = {
   getAll,
   getById,
@@ -56,4 +64,5 @@ module.exports = {
   token,
   addTalker,
   putTalker,
+  deleteTalker,
 };
