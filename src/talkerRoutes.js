@@ -5,6 +5,8 @@ const talkerDB = require('./talkerDB');
 const router = express.Router();
 
 const DATA_REGEX = /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+const ERROR = 'Erro na solicitação:';
+const MESAGE_ERROR = 'Erro na solicitação';
 
 const validateName = (req, res, next) => {
   const { name } = req.body;
@@ -93,8 +95,19 @@ router.get('/', async (req, res) => {
     const result = await talkerDB.getAll();
     res.status(200).json(result);
   } catch (error) {
-    console.error('Erro na solicitação:', error);
-    res.status(500).json({ message: 'Erro na solicitação' });
+    console.error(ERROR, error);
+    res.status(500).json({ message: MESAGE_ERROR });
+  }
+});
+
+router.get('/search', validateToken, async (req, res) => {
+  const searchTerm = req.query.q;
+  try {
+    const result = await talkerDB.getSearchTerm(searchTerm);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(ERROR, error);
+    res.status(500).json({ message: MESAGE_ERROR });
   }
 });
 
@@ -118,8 +131,8 @@ router.post('/', validateName, validateToken, validateAge, validateTalk,
       const result = await talkerDB.addTalker(req.body);
       res.status(201).json(result);
     } catch (error) {
-      console.error('Erro na solicitação:', error);
-      res.status(500).json({ message: 'Erro na solicitação' });
+      console.error(ERROR, error);
+      res.status(500).json({ message: MESAGE_ERROR });
     }
   });
 
@@ -134,8 +147,8 @@ router.put('/:id', validateName, validateToken, validateAge, validateTalk,
       }
       return res.status(200).json(result[5]);
     } catch (error) {
-      console.error('Erro na solicitação:', error);
-      res.status(500).json({ message: 'Erro na solicitação' });
+      console.error(ERROR, error);
+      res.status(500).json({ message: MESAGE_ERROR });
     }
   });
 
@@ -145,8 +158,8 @@ router.delete('/:id', validateToken, async (req, res) => {
     await talkerDB.deleteTalker(id);
     return res.status(204).end();
   } catch (error) {
-    console.error('Erro na solicitação:', error);
-    res.status(500).json({ message: 'Erro na solicitação' });
+    console.error(ERROR, error);
+    res.status(500).json({ message: MESAGE_ERROR });
   }
 });
 

@@ -57,6 +57,14 @@ const deleteTalker = async (id) => {
   return delTalker;
 };
 
+const getSearchTerm = async (searchTerm) => {
+  const data = await fs.readFile(path.resolve(PATH), 'utf8');
+  const talkers = JSON.parse(data);
+  const search = talkers.filter((talker) => talker.name.toLowerCase()
+    .includes(searchTerm.toLowerCase()));
+  return search;
+};
+
 module.exports = {
   getAll,
   getById,
@@ -65,4 +73,5 @@ module.exports = {
   addTalker,
   putTalker,
   deleteTalker,
+  getSearchTerm,
 };
